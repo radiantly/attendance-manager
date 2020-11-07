@@ -1,6 +1,6 @@
 # Attendance Manager
 
-A webapp built with flask (python) to help organize attendance csv files from MicroSoft Teams.
+A webapp built with flask (python) to help organize attendance csv files from Microsoft Teams.
 
 ### Installation
 

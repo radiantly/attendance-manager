@@ -1,4 +1,40 @@
 {% extends "layout.html" %}
+{% block head %}
+<link href="https://fonts.googleapis.com/css2?family=Raleway&display=swap" rel="stylesheet"> 
+<style>
+    body {
+        /* background-color: #333; */
+        background: url("{{url_for('static', filename='cal.jpg')}}") no-repeat;
+        color: #fff;
+        font-family: Raleway;
+    }
+    h1 {
+        color: #fff;
+        text-shadow: 2px 2px 5px #333;
+    }
+    .overlay {
+        z-index: 1;
+        height: 100%;
+        width: 100%;
+        position: fixed;
+        overflow: auto;
+        top: 0px;
+        left: 0px;
+        background: rgba(0, 0, 0, 0.7); 
+    }
+    .subcontainer {
+        position: relative;
+        z-index: 2;
+    }
+</style>
+{% endblock %}
 {% block content %}
-    Hello World!
+    <div class="subcontainer">
+        <h1>Attendance Manager</h1>
+        <p>A webapp to help organize class attendance</p>
+        <a href="{{ url_for('register') }}">
+            <button type="button" class="btn btn-outline-light">Sign Up Now</button>
+        </a>
+    </div>
+    <div class="overlay"></div>
 {% endblock content %}

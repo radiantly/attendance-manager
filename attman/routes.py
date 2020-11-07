@@ -51,7 +51,15 @@ def home():
                     flash(f"Your file has been successfully uploaded.", "success")
             except UploadNotAllowed:
                 flash("Invalid upload", "danger")
-        return render_template("start.html", form=form)
+        columnHeaders = attnfiles = [
+            i[0].strftime("%b %d")
+            for i in db.session.query(AttnFile.date)
+            .order_by(AttnFile.date)
+            .filter_by(user_id=current_user.id)
+            .all()
+        ]
+        print(columnHeaders)
+        return render_template("start.html", form=form, headings=columnHeaders)
     return render_template("home.html")
 
 

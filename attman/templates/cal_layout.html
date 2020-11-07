@@ -1,0 +1,39 @@
+{% extends "layout.html" %}
+{% block head %}
+<link href="https://fonts.googleapis.com/css2?family=Raleway&display=swap" rel="stylesheet"> 
+<style>
+    body {
+        background: url("{{url_for('static', filename='cal.jpg')}}") no-repeat;
+        color: #fff;
+        font-family: Raleway;
+    }
+    h1 {
+        color: #fff;
+        text-shadow: 2px 2px 5px #333;
+    }
+    p {
+        color: #fff;
+    }
+    .overlay {
+        z-index: 1;
+        height: 100%;
+        width: 100%;
+        position: fixed;
+        overflow: auto;
+        top: 0px;
+        left: 0px;
+        background: rgba(0, 0, 0, 0.7); 
+    }
+    .subcontainer {
+        position: relative;
+        z-index: 2;
+        color: #222;
+    }
+</style>
+{% endblock %}
+{% block content %}
+    <div class="subcontainer">
+        {% block subcontent %}{% endblock %}
+    </div>
+    <div class="overlay"></div>
+{% endblock content %}

@@ -22,16 +22,19 @@
     </div>
     <div class="row mt-5">
         <div class="col">
+            {% if headings %}
             <legend class="border-bottom mb-4">Attendance Table</legend>
             <table id="attnTable" class="display" style="margin: 0;">
                 <thead>
                     <tr>
                         <th>Student name</th>
-                        <th>Column 2</th>
-                        <th>Column 1</th>
+                        {% for heading in headings %}
+                            <th>{{ heading }}</th>
+                        {% endfor %}
                     </tr>
                 </thead>
             </table>
+            {% endif %}
         </div>
     </div>
 {% endblock content %}

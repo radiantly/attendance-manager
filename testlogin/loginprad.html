@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Login and Registration</title>
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+        <div class="main">
+            <div class="form-box">
+                <div class="button-box">
+                    <div id="btn"></div>
+                    <button type="button" class="button-toggle" onclick="login()">Log In</button>
+                    <button type="button" class="button-toggle" onclick="register()">Register</button>
+                </div>
+                <form id="login" class="input-group">
+                    <input type="text" class="input-fields" placeholder="Email" required>
+                    <input type="text" class="input-fields" placeholder="Password" required>
+                    <input type="checkbox" class="check-box"><span>Remember Password</span>
+                    <button type="submit" class="submit-btn">Log In</button>
+                </form>
+                <form id="register" class="input-group">
+                    <input type="email" class="input-fields" placeholder="Email" required>
+                    <input type="text" class="input-fields" placeholder="Password" required>
+                    <input type="text" class="input-fields" placeholder="Confirm Password" required>
+                    <input type="checkbox" class="check-box"><span>I Agree to the Terms and Conditions</span>
+                    <button type="submit" class="submit-btn">Register</button>
+                </form>
+            </div>
+        </div>
+        <script>
+            var log = document.getElementById("login");
+            var reg = document.getElementById("register");
+            var btn = document.getElementById("btn");
+
+            function register(){
+                log.style.left = "-400px";
+                reg.style.left = "50px";
+                btn.style.left = "110px";
+            }
+
+            function login(){
+                log.style.left = "50px";
+                reg.style.left = "450px";
+                btn.style.left = "0";
+            }
+        </script>
+    </body>
+</html>

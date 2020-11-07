@@ -22,3 +22,9 @@ class AttnFile(db.Model):
     filehash = db.Column(db.String(60), nullable=False, unique=True)
     date = db.Column(db.DateTime, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+
+
+class AttnNumbers(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    attended = db.Column(db.Integer, nullable=False)
+    date = db.Column(db.Date, nullable=False)

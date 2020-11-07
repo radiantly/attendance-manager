@@ -8,7 +8,7 @@ from pathlib import Path
 # from flask_uploads import file_allowed
 from attman import app, db, bcrypt, csvfiles
 from attman.forms import RegistrationForm, LoginForm, UploadForm
-from attman.models import User, AttnFile
+from attman.models import User, AttnFile, AttnNumbers
 from attman.csvparse import parseAttendanceCSV, getMeetingDate
 
 
@@ -20,7 +20,7 @@ def home():
         if form.validate_on_submit():
             try:
                 filename = csvfiles.save(form.csvfile.data)
-                parseAttendanceCSV(filename)
+                ppl = parseAttendanceCSV(filename)
                 filePath = filePath = Path.cwd() / "uploads" / filename
                 fileHash = hashlib.md5(filePath.read_bytes()).hexdigest()
                 fileDate = getMeetingDate(filename)
@@ -37,6 +37,8 @@ def home():
                         date=fileDate,
                         user_id=current_user.id,
                     )
+                    attnNumbers = AttnNumbers(attended=len(ppl), date=fileDate)
+                    db.session.add(attnNumbers)
                     db.session.add(attnFile)
                     db.session.commit()
                     flash(f"Your file has been successfully uploaded.", "success")
@@ -44,6 +46,10 @@ def home():
                 flash("Invalid upload", "danger")
         return render_template("start.html", form=form)
     return render_template("home.html")
+
+
+# @app.route("/data")
+# def retrieveData():
 
 
 @app.route("/about")

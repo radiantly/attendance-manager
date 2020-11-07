@@ -28,3 +28,12 @@ class AttnNumbers(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     attended = db.Column(db.Integer, nullable=False)
     date = db.Column(db.Date, nullable=False)
+
+
+class AttnLogs(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    student = db.Column(db.String(120), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    attnfile = db.Column(
+        db.String(120), db.ForeignKey("attn_file.filename"), nullable=False
+    )

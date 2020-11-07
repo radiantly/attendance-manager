@@ -1,5 +1,5 @@
 from flask import render_template, url_for, flash, redirect
-from flask_login import login_user, current_user, logout_user
+from flask_login import login_user, current_user, logout_user, login_required
 from flask_uploads import UploadNotAllowed
 
 import hashlib
@@ -8,7 +8,7 @@ from pathlib import Path
 # from flask_uploads import file_allowed
 from attman import app, db, bcrypt, csvfiles
 from attman.forms import RegistrationForm, LoginForm, UploadForm
-from attman.models import User, AttnFile, AttnNumbers
+from attman.models import User, AttnFile, AttnNumbers, AttnLogs
 from attman.csvparse import parseAttendanceCSV, getMeetingDate
 
 
@@ -40,6 +40,13 @@ def home():
                     attnNumbers = AttnNumbers(attended=len(ppl), date=fileDate)
                     db.session.add(attnNumbers)
                     db.session.add(attnFile)
+                    for person in ppl:
+                        attnlog = AttnLogs(
+                            student=person[0],
+                            user_id=current_user.id,
+                            attnfile=filename,
+                        )
+                        db.session.add(attnlog)
                     db.session.commit()
                     flash(f"Your file has been successfully uploaded.", "success")
             except UploadNotAllowed:
@@ -48,8 +55,33 @@ def home():
     return render_template("home.html")
 
 
-# @app.route("/data")
-# def retrieveData():
+@app.route("/data")
+@login_required
+def retrieveData():
+    names = [
+        i[0]
+        for i in db.session.query(AttnLogs.student)
+        .distinct(AttnLogs.student)
+        .filter_by(user_id=current_user.id)
+        .all()
+    ]
+    names.sort()
+    attnfiles = [
+        i[0]
+        for i in db.session.query(AttnFile.filename)
+        .order_by(AttnFile.date)
+        .filter_by(user_id=current_user.id)
+        .all()
+    ]
+    datatable = [[i] for i in names]
+    for attnfile in attnfiles:
+        for i, name in enumerate(names):
+            if AttnLogs.query.filter_by(student=name, attnfile=attnfile).first():
+                datatable[i].append("X")
+            else:
+                datatable[i].append("A")
+    print(datatable)
+    return {"data": datatable}
 
 
 @app.route("/about")

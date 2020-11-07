@@ -1,11 +1,50 @@
 {% extends "layout.html" %}
+{% block head %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jestrux/jquery-mini-event-calendar/src/mini-event-calendar.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css">
+{% endblock %}
 {% block content %}
-    <form action="" method="POST" enctype="multipart/form-data">
-        {{ form.hidden_tag() }}
-        <legend class="border-bottom mb-4">Upload Attendance CSV file</legend>
-        <div class="form-group">
-            {{ form.csvfile(class="form-control-file") }}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jestrux/jquery-mini-event-calendar/src/mini-event-calendar.min.css">
+    <div class="row">
+        <div class="col">
+            <form action="" method="POST" enctype="multipart/form-data">
+                {{ form.hidden_tag() }}
+                <legend class="border-bottom mb-4">Upload Attendance CSV file</legend>
+                <div class="form-group">
+                    {{ form.csvfile(class="form-control-file") }}
+                </div>
+                <button type="submit" class="btn btn-outline-dark">Upload</button>
+            </form>
         </div>
-        <button type="submit" class="btn btn-outline-dark">Upload</button>
-    </form>
+        <div class="col">
+            <div id="calendar"></div>
+        </div>
+    </div>
+    <div class="row mt-5">
+        <div class="col">
+            <legend class="border-bottom mb-4">Attendance Table</legend>
+            <table id="attnTable" class="display" style="margin: 0;">
+                <thead>
+                    <tr>
+                        <th>Student name</th>
+                        <th>Column 2</th>
+                        <th>Column 1</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
 {% endblock content %}
+{% block scripts %}
+    <script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/jestrux/jquery-mini-event-calendar/src/mini-event-calendar.min.js"></script>
+    <script>
+        $(document).ready( function () {
+            $('#attnTable').DataTable({
+                ajax: '/data',
+                lengthMenu: [[10, 50, -1], [10, 50, "All"]],
+                scrollX: true
+            });
+        } );
+    </script>
+{% endblock scripts %}

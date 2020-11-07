@@ -5,6 +5,7 @@ from flask_login import login_user, current_user, logout_user
 from attman import app, db, bcrypt, csvfiles
 from attman.forms import RegistrationForm, LoginForm, UploadForm
 from attman.models import User
+from attman.csvparse import parseAttendanceCSV
 
 
 @app.route("/", methods=["GET", "POST"])
@@ -15,7 +16,7 @@ def home():
         if form.validate_on_submit():
             try:
                 filename = csvfiles.save(form.csvfile.data)
-                print(filename, app.config["UPLOADED_CSVFILES_DEST"])
+                print(parseAttendanceCSV(filename))
                 flash(f"Your file has been successfully uploaded.", "success")
             except:
                 flash("Invalid upload", "danger")

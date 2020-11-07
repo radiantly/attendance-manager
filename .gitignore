@@ -4,6 +4,9 @@ slac-venv/
 # Database
 data.db
 
+# Uploaded files
+uploads
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

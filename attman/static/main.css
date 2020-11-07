@@ -92,3 +92,7 @@ a.article-title:hover {
   align-items: center;
   height: 80vh;
 }
+
+.alert {
+  z-index: 3;
+}

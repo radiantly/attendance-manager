@@ -9,7 +9,10 @@ A webapp built with flask (python) to help organize attendance csv files from Mi
 git clone https://github.com/radiantly/attendance-manager
 cd attendance-manager
 
-pip install -r requirements.txt # Install dependencies
+# Install dependencies
+pip install git+https://github.com/maxcountryman/flask-uploads
+pip install -r requirements.txt
+
 python create_db.py # To create the initial Tables
 python run.py # To start the flask app
 ```

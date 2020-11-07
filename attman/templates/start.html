@@ -1,0 +1,11 @@
+{% extends "layout.html" %}
+{% block content %}
+    <form action="" method="POST" enctype="multipart/form-data">
+        {{ form.hidden_tag() }}
+        <legend class="border-bottom mb-4">Upload Attendance CSV file</legend>
+        <div class="form-group">
+            {{ form.csvfile(class="form-control-file") }}
+        </div>
+        <button type="submit" class="btn btn-outline-dark">Upload</button>
+    </form>
+{% endblock content %}

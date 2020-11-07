@@ -1,13 +1,25 @@
 from flask import render_template, url_for, flash, redirect
 from flask_login import login_user, current_user, logout_user
-from attman import app, db, bcrypt
-from attman.forms import RegistrationForm, LoginForm
+
+# from flask_uploads import file_allowed
+from attman import app, db, bcrypt, csvfiles
+from attman.forms import RegistrationForm, LoginForm, UploadForm
 from attman.models import User
 
 
-@app.route("/")
-@app.route("/home")
+@app.route("/", methods=["GET", "POST"])
+@app.route("/home", methods=["GET", "POST"])
 def home():
+    if current_user.is_authenticated:
+        form = UploadForm()
+        if form.validate_on_submit():
+            try:
+                filename = csvfiles.save(form.csvfile.data)
+                print(filename, app.config["UPLOADED_CSVFILES_DEST"])
+                flash(f"Your file has been successfully uploaded.", "success")
+            except:
+                flash("Invalid upload", "danger")
+        return render_template("start.html", form=form)
     return render_template("home.html")
 
 

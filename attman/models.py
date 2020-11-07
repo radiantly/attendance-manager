@@ -14,3 +14,11 @@ class User(db.Model, UserMixin):
 
     def __repr__(self):
         return f"User({self.email}, {self.password})"
+
+
+class AttnFile(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    filename = db.Column(db.String(120), nullable=False)
+    filehash = db.Column(db.String(60), nullable=False, unique=True)
+    date = db.Column(db.DateTime, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)

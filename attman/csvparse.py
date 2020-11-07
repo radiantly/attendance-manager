@@ -1,20 +1,22 @@
 import csv
-import codecs
 from pathlib import Path
 from datetime import datetime, timedelta
 
+possibleUserActions = ["Joined", "Joined before", "Left"]
+
+
+def parseGivenDate(datestring):
+    for fmt in ["%m/%d/%Y, %I:%M:%S %p", "%m/%d/%Y, %H:%M:%S"]:
+        try:
+            return datetime.strptime(datestring, fmt)
+        except ValueError:
+            pass
+
 
 def parseAttendanceCSV(filename):
-    def parseGivenDate(datestring):
-        for fmt in ["%m/%d/%Y, %I:%M:%S %p", "%m/%d/%Y, %H:%M:%S"]:
-            try:
-                return datetime.strptime(datestring, fmt)
-            except ValueError:
-                pass
-
     filePath = Path.cwd() / "uploads" / filename
-    with open(filePath) as file:
-        csvreader = csv.reader(codecs.open(filePath, "rU", "utf-16"), delimiter="\t")
+    with open(filePath, mode="r", encoding="utf-16") as file:
+        csvreader = csv.reader(file, delimiter="\t")
         lines = 0
         headings = []
         data = []
@@ -25,7 +27,7 @@ def parseAttendanceCSV(filename):
                 data.append(row)
             lines += 1
 
-        data = [i for i in data if "[" in i[0]]
+        data = [i for i in data if "[" in i[0] and i[1] in possibleUserActions]
 
         data.sort(key=lambda x: x[0])
 
@@ -57,3 +59,12 @@ def parseAttendanceCSV(filename):
                 start = 0
                 end = 0
     return ppl
+
+
+def getMeetingDate(filename):
+    filePath = Path.cwd() / "uploads" / filename
+    with open(filePath, mode="r", encoding="utf-16") as file:
+        csvreader = csv.reader(file, delimiter="\t")
+        for row in csvreader:
+            if len(row) >= 3 and row[1] in possibleUserActions:
+                return parseGivenDate(row[2])

@@ -1,11 +1,15 @@
 from flask import render_template, url_for, flash, redirect
 from flask_login import login_user, current_user, logout_user
+from flask_uploads import UploadNotAllowed
+
+import hashlib
+from pathlib import Path
 
 # from flask_uploads import file_allowed
 from attman import app, db, bcrypt, csvfiles
 from attman.forms import RegistrationForm, LoginForm, UploadForm
-from attman.models import User
-from attman.csvparse import parseAttendanceCSV
+from attman.models import User, AttnFile
+from attman.csvparse import parseAttendanceCSV, getMeetingDate
 
 
 @app.route("/", methods=["GET", "POST"])
@@ -16,9 +20,27 @@ def home():
         if form.validate_on_submit():
             try:
                 filename = csvfiles.save(form.csvfile.data)
-                print(parseAttendanceCSV(filename))
-                flash(f"Your file has been successfully uploaded.", "success")
-            except:
+                parseAttendanceCSV(filename)
+                filePath = filePath = Path.cwd() / "uploads" / filename
+                fileHash = hashlib.md5(filePath.read_bytes()).hexdigest()
+                fileDate = getMeetingDate(filename)
+                if not fileDate:
+                    flash("Error parsing file.", "danger")
+                elif AttnFile.query.filter_by(
+                    filehash=fileHash, user_id=current_user.id
+                ).first():
+                    flash("This file already exists in the database.", "danger")
+                else:
+                    attnFile = AttnFile(
+                        filename=filename,
+                        filehash=fileHash,
+                        date=fileDate,
+                        user_id=current_user.id,
+                    )
+                    db.session.add(attnFile)
+                    db.session.commit()
+                    flash(f"Your file has been successfully uploaded.", "success")
+            except UploadNotAllowed:
                 flash("Invalid upload", "danger")
         return render_template("start.html", form=form)
     return render_template("home.html")

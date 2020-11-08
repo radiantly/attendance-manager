@@ -85,9 +85,11 @@ def retrieveData():
     for attnfile in attnfiles:
         for i, name in enumerate(names):
             if AttnLogs.query.filter_by(student=name, attnfile=attnfile).first():
-                datatable[i].append("X")
+                datatable[i].append("")
             else:
                 datatable[i].append("A")
+    for row in datatable:
+        row.append(sum([1 for i in row if i == ""]))
     print(datatable)
     return {"data": datatable}
 
